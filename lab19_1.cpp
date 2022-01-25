@@ -16,23 +16,70 @@ char score2grade(int score){
 
 string toUpperStr(string x){
     string y = x;
-    for(unsigned i = 0; i < x.size();i++) y[i] = toupper(x[i]);
+    for(unsigned int i = 0; i < x.size();i++) y[i] = toupper(x[i]);
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string filename , vector<string> &names ,vector<int> &scores , vector<char> &grades)
+{
+    ifstream source(filename);
+    string input ;
+    char format[] = "%[^:]: %f %f %f";
+    char scanname[50] ;
+    float a,b,c;
+    while (getline(source,input))
+    {
+        const char *text = input.c_str();
+        sscanf(text,format,scanname,&a,&b,&c);
 
+        names.push_back(scanname);
+        scores.push_back(a+b+c);
+        grades.push_back(score2grade(a+b+c));
+    }
 }
 
-void getCommand(){
+void getCommand(string &command, string &key){
 
+    cout<<"Please input your command: ";
+
+    string input;
+    getline(cin,input);
+    const char *text = input.c_str();
+    char format[] = "%s %[^:] ";
+    char cm[20] , k[20] ;
+    sscanf(text,format,&cm,&k);
+    command = cm;
+    key = k; 
 }
 
-void searchName(){
-
+void searchName(vector<string> &names , vector<int> &scores ,vector<char> &grades , string &key){
+    cout<<"---------------------------------\n";
+    bool find ;
+    for(unsigned int i = 0 ; i < names.size(); i++)
+    {
+        if(toUpperStr(names[i])==key)
+        {
+            cout<<names[i]<<"'s "<<"score = "<<scores[i]<<"\n";
+            cout<<names[i]<<"'s "<<"grade = "<<grades[i]<<"\n";
+            find = true;
+        }
+    }
+    if(!find) cout<<"Cannot found.\n";
+    cout<<"---------------------------------\n";
 }
 
-void searchGrade(){
+void searchGrade(vector<string> &names , vector<int> &scores ,vector<char> &grades , string &key){
+    cout<<"---------------------------------\n";
+    const char *constcharkey = key.c_str();
+    char KEY = *constcharkey;
+    for(unsigned int i =0 ; i < names.size(); i++)
+    {
+        if(grades[i]==KEY)
+        {
+            cout<<names[i]<<" ("<<scores[i]<<")\n";
+        }
+    }
+    cout<<"---------------------------------\n";
 
 }
 
